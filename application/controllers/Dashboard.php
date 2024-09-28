@@ -21,37 +21,36 @@ class Dashboard extends CI_Controller {
     }
 
     public function obtener_clima() {
-        // Configura la URL de la API
-        $lat = 14.6349; // Latitud de Guatemala
-        $lon = -90.5069; // Longitud de Guatemala
-        $api_key = 'ff8ead20374928accc12277471972c3c'; // Tu API key
+      
+        $lat = 14.6349; 
+        $lon = -90.5069; 
+        $api_key = 'ff8ead20374928accc12277471972c3c'; 
 
         $url = "https://api.openweathermap.org/data/2.5/weather?lat={$lat}&lon={$lon}&appid={$api_key}";
 
-        // Inicializa cURL
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
 
-        // Decodifica la respuesta JSON
+       
         $clima = json_decode($response, true);
 
-        // Verifica si hay un error en la respuesta
+     
         if (isset($clima['cod']) && $clima['cod'] === 200) {
-            // Pasa la información del clima a la vista
+           
             return $clima;
         } else {
-            // Maneja el error si la API no responde correctamente
+    
             return null;
         }
     }
 
     public function actualizar_estado_sala() {
         $sala_id = $this->input->post('sala_id');
-        $estado = $this->input->post('estado'); // 'ocupado' o 'libre'
+        $estado = $this->input->post('estado'); 
     
-        // Actualizar el estado en la base de datos
+    
         $this->Sala_model->actualizar_estado($sala_id, $estado);
     
         echo json_encode(['status' => 'success']);
@@ -82,15 +81,15 @@ class Dashboard extends CI_Controller {
         }
     }
 
-    // Nueva función para guardar estadísticas al detener el cronómetro
+
     public function guardar_estadisticas() {
         $data = array(
             'cliente_id'    => $this->input->post('cliente_id'),
             'paquete_id'    => $this->input->post('paquete_id'),
             'sala_id'       => $this->input->post('sala_id'),
             'tipo_reloj'    => $this->input->post('tipo_reloj'),
-            'tiempo_total'  => $this->input->post('tiempo_total'), // en segundos
-            'costo_total'   => $this->input->post('costo_total')  // en formato decimal
+            'tiempo_total'  => $this->input->post('tiempo_total'),
+            'costo_total'   => $this->input->post('costo_total')  
         );
 
         $this->Estadisticas_model->insertar_estadistica($data);
